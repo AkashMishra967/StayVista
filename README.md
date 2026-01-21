@@ -1,2 +1,1 @@
-# StayVista
-StayVista- Full-stack accommodation booking platform (React, Node.js, Express, MongoDb)
+A full-stack accommodation booking platform with user auth, property listings,bookings, and payment.Built with React, Node.js, Express, MongoDb. 

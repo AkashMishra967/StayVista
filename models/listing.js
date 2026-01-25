@@ -1,25 +1,28 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+
+const DEFAULT_IMAGE =
+  "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=60";
+
+
 const listingSchema = new Schema({
     title:{
         type:String,
         required:true,
     },
     description:String,
+
     image:{
-        filename:{
-        type:String,
-        default:"listingimage"
-        },
         url:{
             type:String,
-        default:
-            " https://pixabay.com/photos/nature-waters-lake-island-3082832/ ",
-        set:(v) => v === "" 
-        ? " https://pixabay.com/photos/nature-waters-lake-island-3082832/ "
-        : v,
-    }
+            default:DEFAULT_IMAGE,
+        },
+        filename:{
+            type:String,
+            default:"listingimage",
+        },
+    
 },
     price:Number,
     location:String,

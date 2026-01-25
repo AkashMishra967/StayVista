@@ -12,10 +12,10 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
-
 app.use(methodOverride("_method"));
-
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.json());
+const { listingSchema } = require("./schema.js");
 
 
 main()
@@ -28,8 +28,25 @@ main()
 async function main() {
     await mongoose.connect(MONGO_URL);
 }
+// home route
+app.get("/",(req,res)=>{
+    res.send("Hi, I am root")
+});
+
+const validateListing = (req,res,next) =>{
+ let {error} = listingSchema.validate(req.body);
+    if (error) {
+        let errMsg = error.details.map((el) =>el.message).join(",")
+        throw new ExpressError(400, errMsg);
+    }else{
+        next();
+    }
+
+}
+
+
 //index route
-app.get("/listings", wrapAsync ( async (req, res) => {
+app.get("/listings", wrapAsync(async (req, res) => {
     const allListings = await Listing.find({});
     res.render("listings/index.ejs", { allListings })
 }));
@@ -38,33 +55,56 @@ app.get("/listings/new", (req, res) => {
     res.render("listings/new.ejs")
 })
 //show route
-app.get("/listings/:id", wrapAsync (async (req, res) => {
+app.get("/listings/:id", wrapAsync(async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id);
     res.render("listings/show.ejs", { listing });
 }));
 //create route
-app.post("/listings", wrapAsync (async (req, res,next) => {
-    if(!req.body.listing){
-        throw new ExpressError(404,"Send valid data for listing")
+app.post("/listings",validateListing, wrapAsync(async (req, res, next) => {
+
+    if (!req.body.listing.image?.url?.trim()) {
+        delete req.body.listing.image;
     }
     const newlisting = new Listing(req.body.listing);
+    // if(!newlisting.title){
+    //     throw new ExpressError(404,"Title is missing !");
+    // }
+    // if(!newlisting.description){
+    //     throw new ExpressError(404,"Title is description!");
+    // }
     await newlisting.save();
     res.redirect("/listings");
-    
+
 }));
 //edit route
-app.get("/listings/:id/edit", wrapAsync (async (req, res) => {
+app.get("/listings/:id/edit", wrapAsync(async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id);
     res.render("listings/edit.ejs", { listing })
 }));
-//update route
-app.put("/listings/:id",wrapAsync ( async (req, res) => {
-    let { id } = req.params;
-    await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+
+// UPDATE ROUTE ✅
+app.put("/listings/:id", validateListing, wrapAsync(async (req, res) => {
+    const { id } = req.params;
+
+    if (req.body.listing.image?.url) {
+        req.body.listing.image.url =
+            req.body.listing.image.url.replace(/^"+|"+$/g, "").trim();
+    }
+
+    if (!req.body.listing.image?.url) {
+        delete req.body.listing.image;
+    }
+
+    await Listing.findByIdAndUpdate(id, req.body.listing, {
+        runValidators: true,
+    });
+
     res.redirect(`/listings/${id}`);
 }));
+
+
 //delete route
 app.delete("/listings/:id", async (req, res) => {
     let { id } = req.params;
@@ -89,13 +129,13 @@ app.delete("/listings/:id", async (req, res) => {
 
 // midleware
 
-app.all(/.*/,(req,res,next) =>{
+app.all(/.*/, (req, res, next) => {
     next(new ExpressError(404, "Page Not Found !"))
 })
 
-app.use((err,req,res,next) =>{
-    let {statusCode = 500, message ="something went wrong"} = err;
-    res.status(statusCode).render("error.ejs",{message});
+app.use((err, req, res, next) => {
+    let { statusCode = 500, message = "something went wrong" } = err;
+    res.status(statusCode).render("error.ejs", { message });
     // res.status(statusCode).send(message);
 });
 

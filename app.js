@@ -15,8 +15,8 @@ const ExpressError = require("./utils/ExpressError.js");
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
-const { listingSchema } = require("./schema.js");
-
+const { listingSchema, reviewSchema } = require("./schema.js");
+const Review = require("./models/review.js");
 
 main()
     .then((res) => {
@@ -42,8 +42,19 @@ const validateListing = (req,res,next) =>{
         next();
     }
 
-}
+};
 
+//review schema ke liye 
+const validateReview = (req,res,next) =>{
+ let {error} = reviewSchema.validate(req.body);
+    if (error) {
+        let errMsg = error.details.map((el) =>el.message).join(",")
+        throw new ExpressError(400, errMsg);
+    }else{
+        next();
+    }
+
+};
 
 //index route
 app.get("/listings", wrapAsync(async (req, res) => {
@@ -112,6 +123,17 @@ app.delete("/listings/:id", async (req, res) => {
     console.log(deletedlisting);
     res.redirect("/listings")
 });
+//Reviews post route
+app.post("/listings/:id/reviews", validateReview, wrapAsync(async (req,res) =>{
+     console.log("BODY 👉", req.body)
+    let listing = await Listing.findById(req.params.id);
+    let newReview = new Review(req.body.review);
+    listing.reviews.push(newReview);
+
+    await newReview.save();
+    await listing.save();
+    res.redirect(`/listings/${listing._id}`);
+}));
 
 
 // app.get("/testlisting", async(req,res) =>{

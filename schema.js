@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const review = require("./models/review");
 
 module.exports.listingSchema = Joi.object({
     listing:Joi.object({
@@ -12,10 +13,10 @@ module.exports.listingSchema = Joi.object({
 
 });
 
+module.exports.reviewSchema = Joi.object({
+    review:Joi.object({
+        rating:Joi.number().required().min(1).max(5),
+        comment:Joi.string().required(),
+    }).required(),
+})
 
-// if(!newlisting.title){
-    //     throw new ExpressError(404,"Title is missing !");
-    // }
-    // if(!newlisting.description){
-    //     throw new ExpressError(404,"Title is description!");
-    // }

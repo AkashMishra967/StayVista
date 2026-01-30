@@ -13,8 +13,17 @@ const ExpressError = require("./utils/ExpressError.js");
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
-const listings = require("./routes/listing.js");
-const reviews = require("./routes/review.js");
+
+const listingRouter = require("./routes/listing.js");
+const reviewRouter = require("./routes/review.js");
+const userRouter = require("./routes/user.js");
+
+const session = require("express-session");
+const flash = require("connect-flash");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const User = require("./models/user.js");
+
 
 main()
     .then((res) => {
@@ -26,14 +35,47 @@ main()
 async function main() {
     await mongoose.connect(MONGO_URL);
 }
+
+const sessionOptions ={
+    secret: "mysupersecretcode",
+    resave:false,
+    saveUninitialized: true,
+    cookie:{
+        expires: Date.now() + 7 * 24 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+    },
+
+};
+
 // home route
 app.get("/", (req, res) => {
     res.send("Hi, I am root")
 });
 
+app.use(session(sessionOptions));
+app.use(flash());
+//passport ke liye uske pahle hum session ka hona jaruri hai
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+//serializeUser means seesion ke ander user ka data store krna login krne ke bad
+passport.serializeUser(User.serializeUser());
+//means user apna session khatam kr diya to uska data delete krna padega taki vo phir se login kre
+passport.deserializeUser(User.deserializeUser());
+
+
+//midleware flash
+app.use((req,res,next) =>{
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    next();
+});
+
 //require the listing , review file
-app.use("/listings", listings);
-app.use("/listings/:id/reviews", reviews);
+app.use("/listings", listingRouter);
+app.use("/listings/:id/reviews", reviewRouter);
+app.use("/",userRouter);
 
 // midleware
 app.all(/.*/, (req, res, next) => {

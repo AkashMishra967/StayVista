@@ -87,6 +87,11 @@ app.use((req, res, next) => {
 
 // -------------------- ROUTES --------------------
 
+app.get("/", (req, res) => {
+    res.redirect("/listings");
+});
+
+
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/",userRouter);
@@ -102,10 +107,11 @@ app.use((err, req, res, next) => {
 });
 
 // -------------------- SERVER START --------------------
-
-app.listen("8080", (req, res) => {
-    console.log("port is running now")
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
+
 
 
 

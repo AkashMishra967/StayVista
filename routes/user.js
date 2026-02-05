@@ -4,58 +4,18 @@ const User = require("../models/user.js");
 const wrapAsync = require("../utils/wrapAsync")
 const passport = require("passport");
 const { saveRedirectUrl } = require("../middleware.js");
+const userController = require("../controllers/users.js");
 
-router.get("/signup",(req,res) =>{
-    res.render("users/signup.ejs");
-});
+router.route("/signup")
+.get(userController.renderSignupForm)
+.post( wrapAsync(userController.signup));
 
-router.post("/signup", wrapAsync(async(req,res) =>{
-    try{
-    let{username, email,password} = req.body;
-    const newUser = new User({email, username});
-    const registeredUser = await User.register(newUser, password);
-    console.log(registeredUser);
-    //ager user signup kre to login ka option na aaye
-    req.login(registeredUser,(err) =>{
-        if(err){
-            return next(err);
-        }
-    req.flash("success","Welcome to Wanderlust");
-    res.redirect(res.locals.redirectUrl);
-    });
-    }
-    catch(e){
-        req.flash("error",e.message);
-        res.redirect("/signup");
-    }
-    
-}));
-
+router.route("/login")
 //login ke liye
-router.get("/login",(req,res) =>{
-    res.render("users/login.ejs");
-})
-
-//post route
+.get(userController.renderLoginForm)
 //passport.authenticate ye ek middleware kaam kare ga ki user pahale se to rigister nhi hai
-router.post("/login", saveRedirectUrl, passport.authenticate("local",{failureRedirect:"/login",failureFlash: true}),async(req,res) =>{
-req.flash("Success","welcome to back wanderlust !");
-let redirectUrl = res.locals.redirectUrl || "/listings";
-res.redirect(redirectUrl)
-});
+.post(saveRedirectUrl, passport.authenticate("local",{failureRedirect:"/login",failureFlash: true}),userController.login);
+
 //logout route
-
-router.get("/logout",(req,res,next) =>{
-    req.logout((err) =>{
-        if(err){
-           return next(err);
-        }
-        req.flash("success","you are logged out !");
-        res.redirect("/listings");
-    });
-})
-
-
-
-
+router.get("/logout",userController.logout);
 module.exports = router;

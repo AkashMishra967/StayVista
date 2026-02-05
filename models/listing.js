@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const review = require("./review");
-const { ref } = require("joi");
 const Review = require("./review.js");
 const Schema = mongoose.Schema;
 
@@ -30,6 +29,17 @@ const listingSchema = new Schema({
     price:Number,
     location:String,
     country:String,
+    geometry: {
+  type: {
+    type: String,
+    enum: ["Point"],
+    required: true
+  },
+  coordinates: {
+    type: [Number],
+    required: true
+  }
+},
     reviews:[
         {
             type:Schema.Types.ObjectId,
@@ -41,6 +51,8 @@ const listingSchema = new Schema({
         ref:"User",
     },
 });
+
+
 
 listingSchema.post("findOneAndDelete",async (listing) =>{
     if (listing){

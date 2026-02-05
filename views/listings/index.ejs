@@ -1,25 +1,96 @@
 <% layout("/layouts/boilerplate")%>
-
-    <body>
-        <h1>All Listing</h1>
-        <!-- <form method="get" action="/listings/new">
-        <button>Create New Listing</button>
-    </form> -->
-        <div class="row row-cols-lg-4 row-cols-md-2 row-cols-sm-1">
-            <% for(let listing of allListings) { %>
-                <a href="/listings/<%=listing._id%>" class="listing-link">
-                    <div class="card col  listing-card" style="width: 17rem;">
-                        <img src="<%=listing.image?.url  || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=60'%>" class="card-img-top" alt="listing image"
-                            style="height: 17rem">
-                        <div class="card-img-overlay"></div>
-                        <div class="card-body">
-                            <p class="card-text"><b>
-                                    <%=listing.title%>
-                                </b><br>
-                                <%=listing.price.toLocaleString("en-IN")%> / night
-                            </p>
-                        </div>
-                    </div>
-                </a>
-                <%}%>
+    <style>
+        /* Hide filters on small screens */
+        @media (max-width: 768px) {
+            #filters {
+                display: none;
+            }
+        }
+    </style>
+    <div id="filters">
+        <div class="filter">
+            <div><i class="fa-solid fa-fire"></i></div>
+            <p>Tranding</p>
         </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-bed"></i></i></div>
+            <p>Rooms</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-mountain-city"></i></div>
+            <p>Iconic Cities</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-mountain"></i></div>
+            <p>mountain</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-chess-rook"></i></div>
+            <p>Castles</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-person-swimming"></i></div>
+            <p>Amazing Pools</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-campground"></i></div>
+            <p>Camping</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-tractor"></i></div>
+            <p>Farms</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-regular fa-snowflake"></i></div>
+            <p>Arctic</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-landmark-dome"></i></div>
+            <p>Dome</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-sailboat"></i></div>
+            <p>Boats</p>
+        </div>
+
+        <div class="tax-toggle">
+            <div class="form-check-reverse form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
+                <label class="form-check-label" for="switchCheckDefault">Display total after Taxes</label>
+            </div>
+        </div>
+    </div>
+    <div class="row row-cols-lg-4 row-cols-md-2 row-cols-sm-1 mt-3">
+        <% for(let listing of allListings) { %>
+            <a href="/listings/<%=listing._id%>" class="listing-link">
+                <div class="card col  listing-card" style="width: 17rem;">
+                    <img src="<%=listing.image?.url  || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=60'%>"
+                        class="card-img-top" alt="listing image" style="height: 17rem">
+                    <div class="card-img-overlay"></div>
+                    <div class="card-body">
+                        <p class="card-text"><b>
+                                <%=listing.title%>
+                            </b><br>
+                            <%=listing.price.toLocaleString("en-IN")%> / night
+                                <i class="taxInfo">&nbsp;&nbsp; +18% GST</i>
+                        </p>
+                    </div>
+                </div>
+            </a>
+            <%}%>
+    </div>
+
+    <script>
+        let taxSwitch = document.getElementById("switchCheckDefault");
+        taxSwitch.addEventListener("click", () => {
+            let taxInfo = document.getElementsByClassName("taxInfo");
+            for (info of taxInfo) {
+                if (info.style.display != "inline") {
+                    info.style.display = "inline";
+                }
+                else {
+                    info.style.display = "none";
+                }
+            }
+        });
+    </script>

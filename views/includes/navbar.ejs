@@ -1,85 +1,113 @@
 <style>
+    /* Search Bar Elements Style */
     .search-btn {
         background-color: #fe424d;
         color: white;
         border-radius: 25px;
-        height: 35px;
-        padding: 0 1rem;
-
+        height: 40px; 
+        padding: 0 1.2rem;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 6px;
-
-        line-height: 1;
-    }
-
-    .search-btn i {
-        font-size: 0.9rem;
-        line-height: 1;
+        gap: 8px;
+        border: none;
+        transition: 0.3s;
+        font-weight: 500;
     }
 
     .search-btn:hover {
-        background-color: #fe424d;
-        color: white;
+        background-color: #d9303a;
+    }
+
+    .search-input {
+        border-radius: 25px !important;
+        height: 40px;
+        font-size: 0.9rem;
+        border: 1px solid #ddd !important;
+    }
+
+    .nav-explore {
+        color: #222 !important;
+        font-weight: 500;
+        text-decoration: none;
+        margin-left: 1rem;
+    }
+
+    /* Laptop/Desktop - PERFECT CENTER */
+    @media (min-width: 992px) {
+        .search-container-custom {
+            min-width: 600px; 
+            gap: 10px !important;
+            margin-left: auto !important; /* Left margin auto */
+            margin-right: auto !important; /* Right margin auto -> Center alignment */
+        }
+        .search-input {
+            flex: 1;
+        }
+    }
+
+    /* Mobile/Tablet Fix */
+    @media (max-width: 991px) {
+        .search-container-custom {
+            flex-wrap: nowrap !important;
+            width: 60%; 
+            gap: 5px !important;
+            margin: 0 auto; /* Mobile pe bhi center ki koshish */
+        }
+        
+        .search-input, .search-btn {
+            height: 35px;
+            font-size: 0.75rem;
+        }
+
+        .search-btn span {
+            display: none; /* Mobile pe sirf icon */
+        }
     }
 </style>
 
-<nav class="navbar navbar-expand-md bg-body-light border-bottom">
-    <div class="container-fluid">
-        <!-- Logo -->
-        <a class="navbar-brand" href="/listings">
-            <i class="fa-solid fa-compass"></i>
-        </a>
+<nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top shadow-sm py-1">
+    <div class="container-fluid px-md-4">
+        
+        <div class="d-flex align-items-center" style="min-width: 150px;">
+            <a class="navbar-brand text-danger" href="/listings">
+                <i class="fa-solid fa-compass" style="font-size: 1.8rem;"></i>
+            </a>
+            <a class="nav-explore d-none d-md-block" href="/listings">Explore</a>
+        </div>
 
-        <!-- Toggler for mobile -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <form class="d-flex align-items-center search-container-custom" role="search" action="/listings" method="GET">
+            <select name="country" class="form-select search-input d-none d-lg-block">
+                <option value="">Country</option>
+                <option value="India">India</option>
+                <option value="United Kingdom">UK</option>
+                <option value="Italy">Italy</option>
+                <option value="United States">USA</option>
+            </select>
+
+            <input class="form-control search-input" type="search" name="city" placeholder="Search City..." />
+
+            <button class="btn search-btn shadow-sm" type="submit">
+                <i class="fa-solid fa-magnifying-glass"></i> 
+                <span>Search</span>
+            </button>
+        </form>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- Navbar links -->
-        <div class="collapse navbar-collapse position-relative" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-link" href="/listings">Explore</a>
-            </div>
-
-            <!-- Search form -->
-            <form class="d-flex search-center align-items-center gap-2" role="search" action="/listings" method="GET">
-                <div class="navbar-nav d-flex flex-row align-items-center gap-2">
-                    <!-- Country dropdown -->
-                    <select name="country" class="form-select search-input">
-                        <option value="">Country</option>
-                        <option value="India">India</option>
-                        <option value="United Kingdom">United Kingdom</option>
-                        <option value="Italy">Italy</option>
-                        <option value="Mexico">Mexico</option>
-                        <option value="Tanzania">Tanzania</option>
-                        <option value="Netherlands">Netherlands</option>
-                        <option value="Switzerland">Switzerland</option>
-                        <option value="United States">United States</option>
-                    </select>
-
-                    <!-- City input -->
-                    <input class="form-control search-input" type="search" name="city" placeholder="City" />
-
-                    <button class="btn search-btn" type="submit">
-                        <i class="fa-solid fa-magnifying-glass"></i> Search
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Right side nav -->
-        <div class="navbar-nav ms-auto">
-            <a class="nav-link" href="/listings/new">Airbnb your home</a>
-
-            <% if (!currUser) { %>
-                <a class="nav-link" href="/signup"><b>Sign up</b></a>
-                <a class="nav-link" href="/login"><b>Log in</b></a>
+        <div class="collapse navbar-collapse flex-grow-0" id="navbarNavAltMarkup" style="min-width: 150px;">
+            <div class="navbar-nav align-items-center ms-auto">
+                <a class="nav-link fw-bold" href="/listings/new" style="white-space: nowrap;">Airbnb your home</a>
+                <% if (!currUser) { %>
+                    <a class="nav-link" href="/signup">Sign up</a>
+                    <a class="nav-link" href="/login">Log in</a>
                 <% } else { %>
-                    <a class="nav-link" href="/logout">Log out</a>
-                    <% } %>
+                    <a class="nav-link" href="/logout">Logout</a>
+                <% } %>
+            </div>
         </div>
+
     </div>
 </nav>

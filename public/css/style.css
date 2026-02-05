@@ -8,7 +8,7 @@ body {
     flex: 1;
 }
 
-
+/* Navbar */
 .navbar {
     height: 5rem;
     background-color: white;
@@ -23,10 +23,9 @@ body {
     color: #222222 !important;
 }
 
-/* footer */
+/* Footer */
 .site-footer {
     width: 100%;
-   
 }
 
 .f-info {
@@ -39,8 +38,6 @@ body {
     width: 100%;
 }
 
-
-/* // */
 .f-info-links a {
     text-decoration: none;
     color: #222222;
@@ -64,13 +61,10 @@ body {
     margin-right: 1rem;
 }
 
-
-
-/* card */
+/* Cards */
 .listing-card {
     border: none !important;
     margin-bottom: 2rem;
-
 }
 
 .card-img-top {
@@ -83,8 +77,7 @@ body {
     text-decoration: none;
 }
 
-
-/* card effect */
+/* Card effect */
 .card-img-overlay {
     opacity: 0;
 }
@@ -94,20 +87,14 @@ body {
     background-color: white;
 }
 
-/* new page */
-.add-btn {
-    background-color: #fe424d !important;
-    border: none !important;
-}
-
-/* edit page */
+/* Buttons */
+.add-btn,
 .edit-btn {
     background-color: #fe424d !important;
     border: none !important;
-
 }
 
-/* show page */
+/* Show page */
 .show-img {
     height: 30vh;
 }
@@ -128,8 +115,7 @@ body {
     right: 15px;
 }
 
-
-/* ===== MAP SECTION ===== */
+/* MAP SECTION */
 .map-section {
     margin: 4rem 0;
 }
@@ -152,9 +138,7 @@ body {
     background: #fff;
     padding: 16px;
     border-radius: 22px;
-    box-shadow:
-        0 10px 25px rgba(0, 0, 0, 0.12),
-        0 2px 8px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
 }
 
 #map {
@@ -164,45 +148,40 @@ body {
     overflow: hidden;
 }
 
-/* soft overlay for depth */
 .map-card::after {
     content: "";
     position: absolute;
     inset: 0;
     border-radius: 22px;
     pointer-events: none;
-    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
 }
 
-/* Leaflet controls polish */
 .leaflet-control-zoom a {
     border-radius: 10px !important;
     background: #fff !important;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
-/* Muted classy colors */
 .leaflet-tile {
     filter: saturate(0.85) contrast(1.08);
 }
 
-/* Mobile */
-@media (max-width: 768px) {
-    #map {
-        height: 300px;
-    }
-}
-
-
+/* Search Bar */
 .search-center {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-
-
 }
 
+.search-input {
+    top: 80px;
+    border-radius: 25px;
+    padding: 0.5rem 3rem;
+    font-size: 1rem;
+}
 
+/* Filters */
 #filters {
     display: flex;
     flex-wrap: wrap;
@@ -219,7 +198,6 @@ body {
 .filter:hover {
     cursor: pointer;
     opacity: 1;
-
 }
 
 .filter p {
@@ -235,24 +213,109 @@ body {
     border-radius: 1rem;
     height: 3.25rem;
     padding: 1rem;
-    /* margin-left: 6rem; */
     display: flex;
     align-items: center;
     margin-top: 15px;
-
 }
 
-
-.search-input {
-    border-radius: 25px;
-    padding: 0.5rem 3rem 0.5rem 3rem;
-    font-size: 1rem;
+/* Desktop default */
+.main-container {
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.search-center {
-    position: relative;
-    right: 5px;
+.page-content {
+    min-height: 100vh;
 }
 
+/* ===============================
+   MOBILE RESPONSIVE
+   =============================== */
+@media (max-width: 768px) {
+    /* Navbar */
+    .navbar {
+        height: auto;
+        padding: 0.5rem 1rem;
+    }
+    .nav-link {
+        display: block;
+        text-align: center;
+        font-size: 0.9rem;
+    }
 
+    /* Search Bar */
+    .search-center {
+        position: relative;
+        left: 0;
+        transform: none;
+        margin: 0 auto 0.5rem;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+
+    .search-input {
+        width: 100%;
+    }
+
+    .search-btn {
+        width: 100%;
+    }
+
+    /* Right links stacked */
+    .navbar-nav.ms-auto {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    /* Filters */
+    #filters {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .filter {
+        margin-right: 0;
+        width: 100%;
+    }
+
+    /* Cards */
+    .listing-card {
+        margin-bottom: 1.5rem;
+    }
+    .card-text {
+        position: static;
+        right: 0;
+    }
+
+    /* Map */
+    #map {
+        height: 300px;
+    }
+    .map-card {
+        padding: 12px;
+    }
+
+    /* Footer */
+    .f-info {
+        padding: 1.5rem 1rem;
+    }
+    .f-info-links,
+    .f-info-socials,
+    .f-info-brand {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
+/* Extra small devices override */
+@media (max-width: 576px) {
+    .main-container {
+        max-width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
 

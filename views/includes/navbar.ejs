@@ -1,5 +1,5 @@
 <style>
-    /* Search Bar Elements Style */
+    /* Desktop and Common Styles */
     .search-btn {
         background-color: #fe424d;
         color: white;
@@ -13,11 +13,11 @@
         border: none;
         transition: 0.3s;
         font-weight: 500;
-        flex-shrink: 0; /* Button ko chota hone se rokega */
     }
 
     .search-btn:hover {
         background-color: #d9303a;
+        color: white;
     }
 
     .search-input {
@@ -34,10 +34,11 @@
         margin-left: 1rem;
     }
 
-    /* Laptop/Desktop - PERFECT CENTER */
+    /* Laptop/Desktop - Perfect Center Alignment */
     @media (min-width: 992px) {
         .search-container-custom {
-            min-width: 600px; 
+            min-width: 400px; 
+            max-width: 600px;
             gap: 10px !important;
             margin-left: auto !important;
             margin-right: auto !important;
@@ -47,29 +48,45 @@
         }
     }
 
-    /* Mobile/Tablet Fix */
+    /* Mobile/Tablet Fix - Based on your Screenshot */
     @media (max-width: 991px) {
         .search-container-custom {
             flex-wrap: nowrap !important;
-            width: 85% !important; /* Width 60% se badha kar 85% kar di taki jagah mile */
-            gap: 8px !important;
-            margin: 5px auto;
+            width: 100% !important; /* Screen ki poori width use karega padding ke saath */
+            padding: 0 15px; 
+            gap: 12px !important; /* Input aur Button ke beech space */
+            margin: 10px 0 !important;
+            justify-content: center;
         }
         
         .search-input {
             height: 40px;
             font-size: 0.85rem;
-            flex: 1; /* Input bachi hui puri jagah lega */
-            min-width: 0; /* Bootstrap flex issue fix */
+            flex: 1 1 auto; /* Input lachila rahega */
+            min-width: 0; 
+            border-radius: 20px !important;
         }
 
         .search-btn {
             height: 40px;
-            padding: 0 12px; /* Mobile par padding thodi kam */
+            width: 40px; /* Mobile par button ko round karne ke liye */
+            padding: 0 !important; 
+            flex: 0 0 40px; /* Button pichkega nahi */
+            border-radius: 50% !important; /* Bilkul gol button */
         }
 
         .search-btn span {
-            display: none; /* Mobile pe sirf text hide hoga, icon dikhega */
+            display: none; /* Mobile pe 'Search' text hide hoga, sirf icon dikhega */
+        }
+
+        .search-btn i {
+            font-size: 1rem;
+            margin: 0;
+        }
+        
+        /* Navbar brand aur toggler ko thoda adjust karne ke liye */
+        .navbar-brand {
+            margin-right: 0;
         }
     }
 </style>
@@ -77,7 +94,7 @@
 <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top shadow-sm py-1">
     <div class="container-fluid px-md-4">
         
-        <div class="d-flex align-items-center" style="min-width: 100px;">
+        <div class="d-flex align-items-center">
             <a class="navbar-brand text-danger" href="/listings">
                 <i class="fa-solid fa-compass" style="font-size: 1.8rem;"></i>
             </a>
@@ -93,7 +110,7 @@
                 <option value="United States">USA</option>
             </select>
 
-            <input class="form-control search-input" type="search" name="city" placeholder="Search City..." required />
+            <input class="form-control search-input" type="search" name="city" placeholder="Search City..." />
 
             <button class="btn search-btn shadow-sm" type="submit">
                 <i class="fa-solid fa-magnifying-glass"></i> 
@@ -105,7 +122,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse flex-grow-0" id="navbarNavAltMarkup" style="min-width: 150px;">
+        <div class="collapse navbar-collapse flex-grow-0" id="navbarNavAltMarkup">
             <div class="navbar-nav align-items-center ms-auto">
                 <a class="nav-link fw-bold" href="/listings/new" style="white-space: nowrap;">Airbnb your home</a>
                 <% if (!locals.currUser) { %>

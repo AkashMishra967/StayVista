@@ -67,11 +67,22 @@ body {
     margin-bottom: 2rem;
 }
 
+/* 🔥 IMAGE FIX (MOBILE + DESKTOP) */
 .card-img-top {
-    border-radius: 1rem !important;
-    width: 100% !important;
-    object-fit: cover !important;
+    width: 100%;
+    height: 260px;          /* REQUIRED */
+    object-fit: cover;
+    border-radius: 1rem;
+    background-color: #eee;
 }
+
+/* DESKTOP IMAGE */
+@media (min-width: 992px) {
+    .card-img-top {
+        height: 300px;
+    }
+}
+
 
 .listing-link {
     text-decoration: none;
@@ -95,9 +106,20 @@ body {
 }
 
 /* Show page */
+/* Show page image FIX */
 .show-img {
-    height: 30vh;
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 1rem;
 }
+
+@media (max-width: 768px) {
+    .show-img {
+        height: 240px;
+    }
+}
+
 
 .btns {
     display: flex;

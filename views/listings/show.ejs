@@ -1,44 +1,47 @@
 <% layout("/layouts/boilerplate") %>
 
-<div class="container mt-3">
+<div class="container mt-4">
 
   <!-- TITLE -->
-  <div class="row">
+  <div class="row mb-3">
     <div class="col-12">
       <h2><%= listing.title %></h2>
     </div>
   </div>
 
-  <!-- IMAGE CARD -->
+  <!-- IMAGE + DETAILS -->
   <div class="row justify-content-center">
-    <div class="card col-lg-8 col-md-10 col-12 show-card listing-card">
-      <img
-        src="<%= listing.image.url || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=60' %>"
-        class="card-img-top show-img"
-        alt="listing image"
-      />
+    <div class="col-lg-8 col-md-10 col-12">
+      <div class="card listing-card show-card">
+        <img
+          src="<%= listing.image?.url || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=60' %>"
+          class="card-img-top show-img"
+          alt="listing image"
+        />
 
-      <div class="card-body">
-        <p class="card-text">
-          Owned by
-          <i><%= listing.owner ? listing.owner.username : "Deleted User" %></i>
-        </p>
+        <div class="card-body">
+          <p class="card-text">
+            Owned by
+            <b><%= listing.owner ? listing.owner.username : "Deleted User" %></b>
+          </p>
 
-        <p class="card-text"><%= listing.description %></p>
+          <p class="card-text"><%= listing.description %></p>
 
-        <p class="card-text">
-          ₹<%= listing.price.toLocaleString("en-IN") %>
-        </p>
+          <p class="card-text">
+            ₹<%= listing.price.toLocaleString("en-IN") %> / night
+          </p>
 
-        <p class="card-text"><%= listing.location %></p>
-        <p class="card-text"><%= listing.country %></p>
+          <p class="card-text">
+            <%= listing.location %>, <%= listing.country %>
+          </p>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- EDIT / DELETE -->
   <% if (currUser && listing.owner && listing.owner._id.equals(currUser._id)) { %>
-    <div class="row justify-content-center mt-2">
+    <div class="row justify-content-center mt-3">
       <div class="col-lg-8 col-md-10 col-12 d-flex gap-2">
         <a
           href="/listings/<%= listing._id %>/edit"
@@ -59,7 +62,7 @@
 
   <!-- REVIEW FORM -->
   <% if (currUser) { %>
-    <div class="row justify-content-center mt-4">
+    <div class="row justify-content-center mt-5">
       <div class="col-lg-8 col-md-10 col-12">
         <hr />
         <h4>Leave a Review</h4>
@@ -72,19 +75,19 @@
         >
           <fieldset class="starability-slot">
             <input type="radio" name="review[rating]" value="1" />
-            <label title="Terrible">1 star</label>
+            <label>1 star</label>
 
             <input type="radio" name="review[rating]" value="2" />
-            <label title="Not good">2 stars</label>
+            <label>2 stars</label>
 
             <input type="radio" name="review[rating]" value="3" />
-            <label title="Average">3 stars</label>
+            <label>3 stars</label>
 
             <input type="radio" name="review[rating]" value="4" />
-            <label title="Very good">4 stars</label>
+            <label>4 stars</label>
 
             <input type="radio" name="review[rating]" value="5" checked />
-            <label title="Amazing">5 stars</label>
+            <label>5 stars</label>
           </fieldset>
 
           <div class="mb-3 mt-3">
@@ -108,33 +111,35 @@
 
   <!-- ALL REVIEWS -->
   <% if (listing.reviews.length > 0) { %>
-    <div class="row justify-content-center mt-4">
+    <div class="row justify-content-center mt-5">
       <div class="col-lg-10 col-12">
         <h4>All Reviews</h4>
 
         <div class="row">
           <% for (let review of listing.reviews) { %>
-            <div class="card col-lg-5 col-md-6 col-12 m-2">
-              <div class="card-body">
-                <h5>
-                  @<%= review.author ? review.author.username : "Deleted User" %>
-                </h5>
+            <div class="col-lg-5 col-md-6 col-12 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <h5>
+                    @<%= review.author ? review.author.username : "Deleted User" %>
+                  </h5>
 
-                <p
-                  class="starability-result"
-                  data-rating="<%= review.rating %>"
-                ></p>
+                  <p
+                    class="starability-result"
+                    data-rating="<%= review.rating %>"
+                  ></p>
 
-                <p><%= review.comment %></p>
+                  <p><%= review.comment %></p>
 
-                <% if (currUser && review.author && review.author._id.equals(currUser._id)) { %>
-                  <form
-                    method="POST"
-                    action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
-                  >
-                    <button class="btn btn-sm btn-dark">Delete</button>
-                  </form>
-                <% } %>
+                  <% if (currUser && review.author && review.author._id.equals(currUser._id)) { %>
+                    <form
+                      method="POST"
+                      action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
+                    >
+                      <button class="btn btn-sm btn-dark">Delete</button>
+                    </form>
+                  <% } %>
+                </div>
               </div>
             </div>
           <% } %>
@@ -143,27 +148,21 @@
     </div>
   <% } %>
 
-  <!-- MAP SECTION -->
-  <% if (listing.geometry && listing.geometry.coordinates) { %>
-    <div class="container map-section">
-      <div class="row">
-        <div class="col-12">
-          <div class="map-title">📍 Location on Map</div>
-          <div class="map-subtitle">
-            Exact location provided by the host
-          </div>
-
-          <div class="map-card">
-            <div id="map" class="listing-map"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <script>
-      window.listing = <%- JSON.stringify(listing) %>;
-    </script>
-    <script src="/js/map.js"></script>
-  <% } %>
-
 </div>
+
+<!-- MAP SECTION (FULL WIDTH SAFE) -->
+<% if (listing.geometry && listing.geometry.coordinates) { %>
+  <div class="container map-section">
+    <div class="map-title">📍 Location on Map</div>
+    <div class="map-subtitle">Exact location provided by the host</div>
+
+    <div class="map-card">
+      <div id="map"></div>
+    </div>
+  </div>
+
+  <script>
+    window.listing = <%- JSON.stringify(listing) %>;
+  </script>
+  <script src="/js/map.js"></script>
+<% } %>

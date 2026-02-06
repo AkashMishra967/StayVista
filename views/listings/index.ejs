@@ -7,113 +7,77 @@
       display: none;
     }
   }
+
+  .listing-link {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .listing-card img {
+    height: 18rem;
+    object-fit: cover;
+  }
 </style>
 
-<!-- ================= FILTERS ================= -->
-<div id="filters">
-  <div class="filter">
-    <div><i class="fa-solid fa-fire"></i></div>
-    <p>Trending</p>
-  </div>
-  <div class="filter">
-    <div><i class="fa-solid fa-bed"></i></div>
-    <p>Rooms</p>
-  </div>
-  <div class="filter">
-    <div><i class="fa-solid fa-mountain-city"></i></div>
-    <p>Iconic Cities</p>
-  </div>
-  <div class="filter">
-    <div><i class="fa-solid fa-mountain"></i></div>
-    <p>Mountain</p>
-  </div>
-  <div class="filter">
-    <div><i class="fa-solid fa-chess-rook"></i></div>
-    <p>Castles</p>
-  </div>
-  <div class="filter">
-    <div><i class="fa-solid fa-person-swimming"></i></div>
-    <p>Amazing Pools</p>
-  </div>
-  <div class="filter">
-    <div><i class="fa-solid fa-campground"></i></div>
-    <p>Camping</p>
-  </div>
-  <div class="filter">
-    <div><i class="fa-solid fa-tractor"></i></div>
-    <p>Farms</p>
-  </div>
-  <div class="filter">
-    <div><i class="fa-regular fa-snowflake"></i></div>
-    <p>Arctic</p>
-  </div>
-  <div class="filter">
-    <div><i class="fa-solid fa-landmark-dome"></i></div>
-    <p>Dome</p>
-  </div>
-  <div class="filter">
-    <div><i class="fa-solid fa-sailboat"></i></div>
-    <p>Boats</p>
-  </div>
+<!-- FILTERS -->
+<div id="filters" class="d-flex flex-wrap gap-3 mb-3">
+  <div class="filter"><i class="fa-solid fa-fire"></i><p>Trending</p></div>
+  <div class="filter"><i class="fa-solid fa-bed"></i><p>Rooms</p></div>
+  <div class="filter"><i class="fa-solid fa-mountain-city"></i><p>Cities</p></div>
+  <div class="filter"><i class="fa-solid fa-mountain"></i><p>Mountain</p></div>
+  <div class="filter"><i class="fa-solid fa-chess-rook"></i><p>Castles</p></div>
+  <div class="filter"><i class="fa-solid fa-person-swimming"></i><p>Pools</p></div>
+  <div class="filter"><i class="fa-solid fa-campground"></i><p>Camping</p></div>
+  <div class="filter"><i class="fa-solid fa-tractor"></i><p>Farms</p></div>
+  <div class="filter"><i class="fa-regular fa-snowflake"></i><p>Arctic</p></div>
+  <div class="filter"><i class="fa-solid fa-landmark-dome"></i><p>Dome</p></div>
+  <div class="filter"><i class="fa-solid fa-sailboat"></i><p>Boats</p></div>
 
-  <div class="tax-toggle">
-    <div class="form-check-reverse form-switch">
+  <div class="tax-toggle ms-auto">
+    <div class="form-check form-switch">
       <input class="form-check-input" type="checkbox" id="switchCheckDefault">
-      <label class="form-check-label" for="switchCheckDefault">
-        Display total after Taxes
-      </label>
+      <label class="form-check-label">Display total after Taxes</label>
     </div>
   </div>
 </div>
 
-<!-- ================= LISTINGS ================= -->
-<div class="row row-cols-lg-4 row-cols-md-2 row-cols-sm-1 mt-3 g-4">
+<!-- LISTINGS -->
+<div class="container">
+  <div class="row g-4">
+    <% for (let listing of allListings) { %>
 
-  <% for (let listing of allListings) { %>
-    <div class="col">
+      <div class="col-lg-3 col-md-6 col-sm-12">
+        <div class="card listing-card h-100">
 
-      <div class="card listing-card h-100">
+          <a href="/listings/<%= listing._id %>" class="listing-link">
+            <img
+              src="<%= listing.image?.url || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=60' %>"
+              class="card-img-top"
+              alt="listing image"
+            >
+          </a>
 
-        <!-- IMAGE (CLICKABLE) -->
-        <a href="/listings/<%= listing._id %>" class="listing-link">
-          <img
-            src="<%= listing.image?.url || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=60' %>"
-            class="card-img-top"
-            alt="listing image"
-            loading="lazy"
-            decoding="async"
-          />
-        </a>
+          <div class="card-body">
+            <p class="card-text">
+              <b><%= listing.title %></b><br>
+              ₹ <%= listing.price.toLocaleString("en-IN") %> / night
+              <span class="taxInfo d-none"> +18% GST</span>
+            </p>
+          </div>
 
-        <div class="card-img-overlay"></div>
-
-        <!-- CARD BODY -->
-        <div class="card-body">
-          <p class="card-text">
-            <b><%= listing.title %></b><br>
-            ₹<%= listing.price.toLocaleString("en-IN") %> / night
-            <i class="taxInfo">&nbsp;&nbsp;+18% GST</i>
-          </p>
         </div>
-
       </div>
 
-    </div>
-  <% } %>
-
+    <% } %>
+  </div>
 </div>
 
-<!-- ================= TAX TOGGLE ================= -->
 <script>
   const taxSwitch = document.getElementById("switchCheckDefault");
-
-  if (taxSwitch) {
-    taxSwitch.addEventListener("click", () => {
-      const taxInfo = document.getElementsByClassName("taxInfo");
-      for (let info of taxInfo) {
-        info.style.display =
-          info.style.display === "inline" ? "none" : "inline";
-      }
-    });
-  }
+  taxSwitch.addEventListener("change", () => {
+    const infos = document.getElementsByClassName("taxInfo");
+    for (let info of infos) {
+      info.classList.toggle("d-none");
+    }
+  });
 </script>

@@ -1,36 +1,29 @@
-
 document.addEventListener("DOMContentLoaded", function () {
-  if (typeof L === "undefined") {
-    console.error("Leaflet not loaded");
-    return;
-  }
-
-  if (!window.listing || !window.listing.geometry || !window.listing.geometry.coordinates) {
-    console.error("Listing data missing or coordinates not provided");
-    return;
-  }
+  if (!window.listing?.geometry?.coordinates) return;
 
   const [lng, lat] = window.listing.geometry.coordinates;
 
   const map = L.map("map", {
     center: [lat, lng],
-    zoom: 23,
+    zoom: 13,
+    scrollWheelZoom: false,
+    tap: false, // 🔥 mobile fix
   });
 
-  // Free OpenStreetMap tiles
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: '© <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+    attribution: "© OpenStreetMap contributors",
   }).addTo(map);
 
-  // Marker with popup
   L.marker([lat, lng])
     .addTo(map)
-    .bindPopup(`<b>${window.listing.title}</b><br>₹${window.listing.price?.toLocaleString("en-IN") || ""}`)
-    .openPopup();
+    .bindPopup(
+      `<b>${window.listing.title}</b><br>₹${
+        window.listing.price?.toLocaleString("en-IN") || ""
+      }`
+    );
 
-  // Fix map rendering if container size changes
+  // 🔥 MOST IMPORTANT FIX FOR MOBILE
   setTimeout(() => {
-    map.invalidateSize();
-    map.setView([lat, lng], 13);
-  }, 500);
+    map.invalidateSize(true);
+  }, 600);
 });

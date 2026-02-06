@@ -2,42 +2,48 @@ const express = require("express");
 const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync.js");
 const Listing = require("../models/listing.js");
-const { isLoggedIn, isOwner, validateListing } = require("../middleware.js")
+const { isLoggedIn, isOwner, validateListing } = require("../middleware.js");
 const listingController = require("../controllers/listing.js");
+
 const multer = require("multer");
-const {storage} = require("../cloudConfig.js");
-const upload = multer({storage});
+const { storage } = require("../cloudConfig.js");
+const upload = multer({ storage });
 
-
-
-
+// INDEX + CREATE
 router.route("/")
-//index route
-.get (wrapAsync(listingController.index))
-//create route
- .post(isLoggedIn, upload.single("listing[image]"),validateListing, wrapAsync(listingController.createlisting))
- 
+    .get(wrapAsync(listingController.index))
+    .post(
+        isLoggedIn,
+        upload.single("listing[image]"),
+        validateListing,
+        wrapAsync(listingController.createlisting)
+    );
 
-
-//new route
+// NEW LISTING (🔐 LOGIN REQUIRED)
 router.get("/new", isLoggedIn, listingController.renderNewForm);
 
+// SHOW + UPDATE + DELETE
 router.route("/:id")
-//show route
-.get(wrapAsync(listingController.showListing))
-// UPDATE ROUTE 
-.put(isLoggedIn, isOwner,  upload.single("image"),validateListing, wrapAsync(listingController.updateListing))
-//delete route
-.delete(isLoggedIn,isOwner,  wrapAsync(listingController.destroyListing))
+    .get(wrapAsync(listingController.showListing))
+    .put(
+        isLoggedIn,
+        isOwner,
+        upload.single("listing[image]"),
+        validateListing,
+        wrapAsync(listingController.updateListing)
+    )
+    .delete(
+        isLoggedIn,
+        isOwner,
+        wrapAsync(listingController.destroyListing)
+    );
 
-
-
-
-
-
-
-//edit route
-router.get("/:id/edit", isLoggedIn, isOwner, wrapAsync(listingController.renderEditForm));
-
+// EDIT
+router.get(
+    "/:id/edit",
+    isLoggedIn,
+    isOwner,
+    wrapAsync(listingController.renderEditForm)
+);
 
 module.exports = router;

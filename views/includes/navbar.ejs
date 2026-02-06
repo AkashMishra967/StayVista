@@ -1,7 +1,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
 <style>
-    /* Desktop Styles */
     .search-btn {
         background-color: #fe424d;
         color: white;
@@ -29,7 +28,6 @@
         border: 1px solid #ddd !important;
     }
 
-    /* Laptop/Desktop Alignment */
     @media (min-width: 992px) {
         .search-container-custom {
             min-width: 400px; 
@@ -43,15 +41,14 @@
         }
     }
 
-    /* Mobile/Tablet Fix (Deployment Ready) */
     @media (max-width: 991px) {
         .search-container-custom {
             flex-wrap: nowrap !important;
-            width: 95% !important; /* Mobile screen ke hisaab se perfect width */
+            width: 95% !important;
             padding: 0 10px; 
-            gap: 10px !important; /* Input aur Button ke beech space */
+            gap: 10px !important;
             margin: 10px auto !important;
-            display: flex !important; /* Ensure flexbox is active */
+            display: flex !important;
         }
         
         .search-input {
@@ -64,71 +61,102 @@
 
         .search-btn {
             height: 40px !important;
-            width: 45px !important; /* Button ki width fix ki */
+            width: 45px !important;
             padding: 0 !important; 
-            flex: 0 0 45px !important; /* Isse button pichkega nahi */
-            border-radius: 50% !important; /* Gol (Circular) Button */
+            flex: 0 0 45px !important;
+            border-radius: 50% !important;
             background-color: #fe424d !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
         }
 
-        /* Mobile pe sirf icon dikhega, text hide hoga */
         .search-btn span {
             display: none !important; 
         }
 
-        /* Icon styling */
         .search-btn i {
-            display: inline-block !important;
             font-size: 1.1rem !important;
             color: white !important;
-            visibility: visible !important;
         }
     }
 </style>
 
 <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top shadow-sm py-1">
     <div class="container-fluid px-md-4">
-        
+
+        <!-- Logo -->
         <div class="d-flex align-items-center">
             <a class="navbar-brand text-danger" href="/listings">
                 <i class="fa-solid fa-compass" style="font-size: 1.8rem;"></i>
             </a>
-            <a class="nav-explore d-none d-md-block text-decoration-none" href="/listings" style="color: #222; font-weight: 500; margin-left: 1rem;">Explore</a>
+            <a class="nav-explore d-none d-md-block text-decoration-none"
+               href="/listings"
+               style="color: #222; font-weight: 500; margin-left: 1rem;">
+               Explore
+            </a>
         </div>
 
-        <form class="d-flex align-items-center search-container-custom" role="search" action="/listings" method="GET">
+        <!-- Search -->
+        <form class="d-flex align-items-center search-container-custom"
+              role="search"
+              action="/listings"
+              method="GET">
+
             <select name="country" class="form-select search-input d-none d-lg-block">
                 <option value="">Country</option>
                 <option value="India">India</option>
-                <option value="United Kingdom">UK</option>
+                <option value="United Kingdom">United Kingdom</option>
                 <option value="Italy">Italy</option>
-                <option value="United States">USA</option>
+                <option value="Japan">Japan</option>
+                <option value="United States">United States</option>
             </select>
 
-            <input class="form-control search-input" type="search" name="city" placeholder="Search City..." />
+            <input class="form-control search-input"
+                   type="search"
+                   name="city"
+                   placeholder="Search City..." />
 
             <button class="btn search-btn shadow-sm" type="submit">
-                <i class="fa-solid fa-magnifying-glass"></i> 
+                <i class="fa-solid fa-magnifying-glass"></i>
                 <span>Search</span>
             </button>
         </form>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+        <!-- Toggle -->
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNavAltMarkup">
             <span class="navbar-toggler-icon"></span>
         </button>
 
+        <!-- Right Menu -->
         <div class="collapse navbar-collapse flex-grow-0" id="navbarNavAltMarkup">
             <div class="navbar-nav align-items-center ms-auto">
-                <a class="nav-link fw-bold" href="/listings/new" style="white-space: nowrap;">Airbnb your home</a>
-                <% if (!locals.currUser) { %>
+
+                <!-- Airbnb your home -->
+                <% if (currUser) { %>
+                    <a class="nav-link fw-bold"
+                       href="/listings/new"
+                       style="white-space: nowrap;">
+                       Airbnb your home
+                    </a>
+                <% } else { %>
+                    <a class="nav-link fw-bold"
+                       href="/login"
+                       style="white-space: nowrap;">
+                       Airbnb your home
+                    </a>
+                <% } %>
+
+                <!-- Auth Links -->
+                <% if (!currUser) { %>
                     <a class="nav-link" href="/signup">Sign up</a>
                     <a class="nav-link" href="/login">Log in</a>
                 <% } else { %>
-                    <a class="nav-link" href="/logout">Logout</a>
+                    <a class="nav-link" href="/logout">Log out</a>
                 <% } %>
+
             </div>
         </div>
 
